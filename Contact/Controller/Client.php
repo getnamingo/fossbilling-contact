@@ -62,15 +62,38 @@ class Client implements \FOSSBilling\InjectionAwareInterface
             // Validate form data
             if ($name && $email && $message) {
                 // Define sender and recipient
+                $parts = explode('.', $domain);
+                $sld = '';
+                $tld = '';
+
+                if (count($parts) >= 3) {
+                    $tld = implode('.', array_slice($parts, -2));
+                    $sld = $parts[count($parts) - 3];
+                } elseif (count($parts) === 2) {
+                    $sld = $parts[0];
+                    $tld = $parts[1];
+                } else {
+                    $error = "Error: Invalid domain format.";
+                }
+
+                if ($sld && $tld) {
+                    $contact = $this->di['db']->getRow(
+                        'SELECT * FROM service_domain WHERE sld = :sld AND tld = :tld',
+                        ['sld' => $sld, 'tld' => '.' . $tld]
+                    );
+                } else {
+                    $error = "Error: Unable to extract SLD and TLD from the domain.";
+                }
+
                 $sender = [
                     'email' => $email,
                     'name' => $name,
                 ];
                 $recipient = [
-                    'email' => 'registrant@example.com', // Replace with actual registrant's email
-                    'name' => 'Domain Registrant',
+                    'email' => $contact['contact_email'],
+                    'name' => $contact['contact_first_name'] . ' ' . $contact['contact_last_name'],
                 ];
-                
+
                 // Get email settings
                 $mod = $this->di['mod']('email');
                 $settings = $mod->getConfig();
@@ -87,7 +110,7 @@ class Client implements \FOSSBilling\InjectionAwareInterface
                     // Log activity if enabled
                     if ($logEnabled) {
                         $activityService = $this->di['mod_service']('activity');
-                        $activityService->logEmail("Contact Domain Registrant: " . $domain, null, $email, 'registrant@example.com', $message);
+                        $activityService->logEmail("Contact Domain Registrant: " . $domain, null, $email, $contact['contact_email'], $message);
                     }
                     $success = 'Your message has been sent successfully.';
                 } catch (\Exception $e) {
