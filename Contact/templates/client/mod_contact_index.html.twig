@@ -5,27 +5,23 @@
 {% block body_class %}tmch{% endblock %}
 {% block breadcrumb %}<li class="breadcrumb-item active" aria-current="page"><a href="#">{{ 'Contact Domain Registrant'|trans }}</a></li>{% endblock %}
 
-{% block page_header %}
-<article class="page-header">
-    <h1>{{ 'Contact Domain Registrant'|trans }}</h1>
-</article>
-{% endblock%}
-
 {% block content %}
 <div class="col-md-12">
     <div class="card mb-4">
-        <div class="card-body">
-
-            {% if success %}
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle fa-fw"></i> {{ success }}
+        <div class="card-header py-3 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="mb-1">{{ 'Contact Domain Registrant'|trans }}</h1>
                 </div>
+            </div>
+        </div>   
+        <div class="card-body">
+            {% if success %}
+                <div class="alert alert-success">{{ success }}</div>
             {% endif %}
             
             {% if error %}
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle fa-fw"></i> {{ error }}
-                </div>
+                <div class="alert alert-danger">{{ error }}</div>
             {% endif %}
 
             {% if domain and not error %}
