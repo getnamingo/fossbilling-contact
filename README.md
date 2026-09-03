@@ -1,5 +1,5 @@
-# Domain Registrant Contact for FOSSBilling
-Provides a contact form to reach the registrant of a specified domain.
+# Registrant Contact Form for FOSSBilling
+Provides a public contact form for sending messages to a domain registrant.
 
 ## Installation
 
@@ -8,7 +8,7 @@ git clone https://github.com/getnamingo/fossbilling-contact
 mv fossbilling-contact/Contact /var/www/modules/
 ```
 
-- Go to Extensions > Overview in the admin panel and activate "Domain Registrant Contact".
+- Go to Extensions > Overview in the admin panel and activate "Registrant Contact Form".
 
 ## Usage Instructions
 
